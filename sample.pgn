@@ -1,0 +1,17 @@
+[Event "FICS rated standard game"]
+[Site "FICS freechess.org"]
+[FICSGamesDBGameNo "371408353"]
+[White "sxsonar"]
+[Black "redhairfox"]
+[WhiteElo "2055"]
+[BlackElo "2069"]
+[TimeControl "900+3"]
+[Date "2015.02.01"]
+[Time "02:20:00"]
+[WhiteClock "0:15:00.000"]
+[BlackClock "0:15:00.000"]
+[ECO "B22"]
+[PlyCount "118"]
+[Result "0-1"]
+
+1. e4 c5 2. c3 d5 3. exd5 Qxd5 4. d4 Nf6 5. dxc5 Qxd1+ 6. Kxd1 e5 7. b4 Ne4 8. Bb5+ Bd7 9. Bxd7+ Nxd7 10. Ke2 O-O-O 11. Nf3 f5 12. Bg5 Re8 13. Bd2 Be7 14. Na3 g5 15. Nc4 g4 16. Ne1 Rhg8 17. f3 gxf3+ 18. gxf3 Nef6 19. Nc2 Rg2+ 20. Kf1 Rg6 21. Rg1 Reg8 22. Kf2 f4 23. Rxg6 Rxg6 24. Rg1 Rh6 25. Rg2 Nd5 26. Ne1 Rh3 27. Nd3 e4 28. Nde5 e3+ 29. Bxe3 fxe3+ 30. Nxe3 Nxe3 31. Rg8+ Kc7 32. Nxd7 Kxd7 33. Kxe3 Rxh2 34. a4 Bf6 35. Kd3 Ra2 36. a5 Ra3 37. Rf8 Bxc3 38. Kc4 a6 39. Rf7+ Kc6 40. Rxh7 Bd2 41. Rf7 Ra4 42. Rf6+ Kc7 43. Rb6 Ra3 44. Rf6 Rc3+ 45. Kd4 Rc1 46. Rf7+ Kc6 47. Rf6+ Kc7 48. Rf7+ Kb8 49. Rf8+ Ka7 50. Rf7 Bxb4 51. Rf5 Bxa5 52. c6 Bb6+ 53. Ke4 Rxc6 54. Kd5 Rc5+ 55. Ke6 Rxf5 56. Kxf5 a5 57. Ke4 Bc5 58. Kd3 b5 59. Kc2 Kb6 {White resigns} 0-1
