@@ -1,65 +1,88 @@
-import chess, chess.pgn
 import numpy as np
+import pgn
+import chess
 import pickle
-import os
-import math
+import copy
 from helper import *
 
-#NUM_TRAIN = 0.8* NUM_GAMES
-#NUM_VALID = 0.2* NUM_GAMES
-#NUM_TEST = NUM_GAMES - (NUM_TRAIN + NUM_VALID)
+DATA = "data/dataset.pgn"
+
+
+NUM_GAMES = 500
+print "Loading PGN file..."
+games = get_all_games(DATA)
+NUM_GAMES = len(games)
+
+
+games = games[:NUM_GAMES]
+print "Finished loading the PGN file."
+print "Total number of games: %d" % len(games)
 
 # Move-out
 X_train, y_train = [], []
-
 # Move-in
 p1_X, p2_X, p3_X = [], [], []
 p4_X, p5_X, p6_X = [], [], []
 p1_y, p2_y, p3_y = [], [], []
 p4_y, p5_y, p6_y = [], [], []
 
-gameidx = 1
+NUM_MOVES = 0
+for index, game in enumerate(games):
 
-for g in read_games("data/finaldata.pgn"):
-	print "@game:", gameidx
-	gameidx+=1
-	node = g
-	moveidx = 0
-	while node.variations:
-		b = node.board()
-		node = node.variation(0)
-		from_square = node.move.from_square
-		to_square = node.move.to_square
+	if index % 100 == 0:
+		print "Processed %d games out of %d" % (index, NUM_GAMES)
 
-		if moveidx % 2 == 0:
-			im = convert_bitboard_to_image(b)	
-		else:
-			im = flip_image( convert_bitboard_to_image(b) )
-			im = flip_color(im)
-			from_square = 64 - from_square
-			to_square = 64 - to_square
+	board = chess.Bitboard()
+	moves = game.moves
 
-		im = np.rollaxis(im, 2, 0)
+	for move_index, move in enumerate(moves):
+		if move[0].isalpha(): # check if move is SAN		
+			NUM_MOVES +=1
+			from_to_chess_coords = board.parse_san(move)
+			from_to_chess_coords = str(from_to_chess_coords)
 
-		X_train.append(im)
-		y_train.append(from_square)
+			from_chess_coords = from_to_chess_coords[:2]
+			to_chess_coords = from_to_chess_coords[2:4]
+			from_coords = chess_coord_to_coord2d(from_chess_coords)
+			to_coords = chess_coord_to_coord2d(to_chess_coords)
+						
+			if move_index % 2 == 0:
+				im = convert_bitboard_to_image(board)
+			else:
+				im = flip_image(convert_bitboard_to_image(board))
+				im = flip_color(im)
+				from_coords = flip_coord2d(from_coords)
+				to_coords = flip_coord2d(to_coords)
 
-		piece = b.piece_type_at(chess.SQUARES[node.move.from_square])
-		
-		p_X = "p%d_X" % (piece)
-		p_X = eval(p_X)
-		p_X.append(im)
-		
-		p_y = "p%d_y" % (piece )
-		p_y = eval(p_y)
-		p_y.append(to_square)
+			index_piece = np.where(im[from_coords] != 0)
+			# index_piece denotes the index in PIECE_TO_INDEX
+			index_piece = index_piece[0][0] # ranges from 0 to 5
 
-		moveidx +=1
+			from_coords = flatten_coord2d(from_coords)
+			to_coords = flatten_coord2d(to_coords)
+
+			im = np.rollaxis(im, 2, 0) # to get into form (C, H, W)
+
+			board.push_san(move)
+
+			# Filling the X_train and y_train array
+			X_train.append(im)
+			y_train.append(from_coords)
+
+			# Filling the p_X and p_y array
+			p_X = "p%d_X" % (index_piece + 1)
+			p_X = eval(p_X)
+			p_X.append(im)
+			
+			p_y = "p%d_y" % (index_piece + 1)
+			p_y = eval(p_y)
+			p_y.append(to_coords)
+
+
+print "NUM_GAMES: ", NUM_GAMES, "AND NUM_MOVES ", NUM_MOVES
 
 # Move-out
 X_train, y_train = np.array(X_train), np.array(y_train)
-
-
 # Move-in
 p1_X, p2_X, p3_X = np.array(p1_X), np.array(p2_X), np.array(p3_X)
 p4_X, p5_X, p6_X = np.array(p4_X), np.array(p5_X), np.array(p6_X)
