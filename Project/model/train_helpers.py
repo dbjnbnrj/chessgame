@@ -32,9 +32,23 @@ def plot(loss_history, train_acc_history, val_acc_history):
 	plt.ylabel('loss')
 	plt.show()
 
+def save_pickled(data, name):
+	f = open(name, "wb")
+	pickle.dump(data, f)
+	f.close()
+
 def train(trainX, trainY, valX,valY, params, convnet ):
 	trainer = ClassifierTrainer()
 	best_model, loss_history, train_acc_history, val_acc_history = trainer.train(
 		trainX, trainY, valX, valY, params, convnet, 
-		reg = 0., learning_rate= 0.0001, batch_size=250, num_epochs=15, learning_rate_decay=0.99, update='rmsprop', verbose=True, dropout=1.0)
+		reg = 0., 
+		learning_rate= 0.0015, 
+		batch_size=250, 
+		num_epochs=15, 
+		learning_rate_decay=0.999, 
+		update='rmsprop', 
+		verbose=True, 
+		dropout=1.0)
+	
 	return best_model, loss_history, train_acc_history, val_acc_history 
+

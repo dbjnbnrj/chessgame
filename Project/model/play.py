@@ -2,7 +2,6 @@
 # https://github.com/erikbern/deep-pink
 
 import numpy as np
-import sunfish
 import chess
 import pickle
 import random
@@ -11,14 +10,14 @@ import traceback
 import re
 import string
 import math
-from util import *
-from run import *
+from helper import *
 from chess import pgn
 from layers import *
 from fast_layers import *
 from classifiers.convnet import *
 from classifier_trainer import ClassifierTrainer
 from time import time
+import sunfish
 
 trained_models = {}
 INDEX_TO_PIECE_2 = {0 : 'Pawn', 1 : 'R', 2 : 'N', 3 : 'B', 4 : 'Q', 5 : 'K'}
@@ -28,7 +27,7 @@ def load_models():
     names = ['Piece', 'P', 'R', 'N', 'B', 'Q', 'K']
 
     for index, model_name in enumerate(model_names):
-        path = '%s_model.pkl' % model_name
+        path = '../data/model_%s.pkl' % model_name
         trained_model = get_data(path)
         trained_models[names[index]] = trained_model
 
@@ -144,7 +143,6 @@ class Sunfish(Player):
         self._maxn = maxn
 
     def move(self, gn_current):
-        import sunfish
 
         assert(gn_current.board().turn == 1)
 
@@ -167,16 +165,12 @@ class Sunfish(Player):
 
         return gn_new
 
-def game():
+def game(player_a, player_b):
     gn_current = chess.pgn.Game()
 
     maxn = 10 ** (2.0 + random.random() * 1.0) # max nodes for sunfish
 
     print 'maxn %f' % (maxn)
-
-    player_a = Computer()
-    player_b = Human()
-    #player_b = Sunfish(maxn=maxn)
 
     times = {'A' : 0.0, 'B' : 0.0}
 
@@ -202,16 +196,14 @@ def game():
             elif gn_current.board().can_claim_fifty_moves():
                 return '-' 
             elif s.find('K') == -1 or s.find('k') == -1:
-                # Both AI's suck at checkmating, so also detect capturing the king
                 return side
 
-def play():
-    while True:
-        side = game()
-        f = open('stats.txt', 'a')
-        f.write('%s\n' % (side))
-        f.close()
 
 if __name__ == '__main__':
     load_models()
-    play()
+    f = open("games.txt", "w+")
+    for n in range(0, 10):
+        side = game(Computer(), Sunfish())
+        print "SIDEEEEEE!!! ", side
+        f.write(str(n)+" "+side+"\n")
+    f.close()

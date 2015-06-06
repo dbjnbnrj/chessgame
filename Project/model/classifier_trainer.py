@@ -14,51 +14,6 @@ class ClassifierTrainer(object):
             num_epochs=30, batch_size=100, acc_frequency=None,
             augment_fn=None, predict_fn=None,
             verbose=False):
-    """
-    Optimize the parameters of a model to minimize a loss function. We use
-    training data X and y to compute the loss and gradients, and periodically
-    check the accuracy on the validation set.
-
-    Inputs:
-    - X: Array of training data; each X[i] is a training sample.
-    - y: Vector of training labels; y[i] gives the label for X[i].
-    - X_val: Array of validation data
-    - y_val: Vector of validation labels
-    - model: Dictionary that maps parameter names to parameter values. Each
-      parameter value is a numpy array.
-    - loss_function: A function that can be called in the following ways:
-      scores = loss_function(X, model, reg=reg)
-      loss, grads = loss_function(X, model, y, reg=reg)
-    - reg: Regularization strength. This will be passed to the loss function.
-    - dropout: Amount of dropout to use. This will be passed to the loss function.
-    - learning_rate: Initial learning rate to use.
-    - momentum: Parameter to use for momentum updates.
-    - learning_rate_decay: The learning rate is multiplied by this after each
-      epoch.
-    - update: The update rule to use. One of 'sgd', 'momentum', or 'rmsprop'.
-    - sample_batches: If True, use a minibatch of data for each parameter update
-      (stochastic gradient descent); if False, use the entire training set for
-      each parameter update (gradient descent).
-    - num_epochs: The number of epochs to take over the training data.
-    - batch_size: The number of training samples to use at each iteration.
-    - acc_frequency: If set to an integer, we compute the training and
-      validation set error after every acc_frequency iterations.
-    - augment_fn: A function to perform data augmentation. If this is not
-      None, then during training each minibatch will be passed through this
-      before being passed as input to the network.
-    - predict_fn: A function to mutate data at prediction time. If this is not
-      None, then during each testing each minibatch will be passed through this
-      before being passed as input to the network.
-    - verbose: If True, print status after each epoch.
-
-    Returns a tuple of:
-    - best_model: The model that got the highest validation accuracy during
-      training.
-    - loss_history: List containing the value of the loss function at each
-      iteration.
-    - train_acc_history: List storing the training set accuracy at each epoch.
-    - val_acc_history: List storing the validation set accuracy at each epoch.
-    """
 
     N = X.shape[0]
 
@@ -91,7 +46,8 @@ class ClassifierTrainer(object):
         X_batch = augment_fn(X_batch)
 
       # evaluate cost and gradient
-      cost, grads = loss_function(X_batch, model, y_batch, reg=reg, dropout=dropout)
+      # cost, grads = loss_function(X_batch, model, y_batch, reg=reg, dropout=dropout)
+      cost, grads = loss_function(X_batch, model, y_batch, reg=reg)
       loss_history.append(cost)
 
       # perform a parameter update
@@ -156,7 +112,6 @@ class ClassifierTrainer(object):
           if predict_fn is not None:
             X_val_slice = predict_fn(X_val_slice)
           scores = loss_function(X_val_slice, model)
-          #scores = clip_pieces(scores, X_val_slice)
           y_pred_val.append(np.argmax(scores, axis=1))
 
         y_pred_val = np.hstack(y_pred_val)

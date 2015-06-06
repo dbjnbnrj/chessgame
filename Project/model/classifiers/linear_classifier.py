@@ -7,27 +7,13 @@ class LinearClassifier:
 
   def train(self, X, y, learning_rate=1e-3, reg=1e-5, num_iters=100,
             batch_size=200, verbose=False):
-    """
-    Train this linear classifier using stochastic gradient descent.
-
-    Inputs:
-    - X: D x N array of training data. Each training point is a D-dimensional
-         column.
-    - y: 1-dimensional array of length N with labels 0...K-1, for K classes.
-    - learning_rate: (float) learning rate for optimization.
-    - reg: (float) regularization strength.
-    - num_iters: (integer) number of steps to take when optimizing
-    - batch_size: (integer) number of training examples to use at each step.
-    - verbose: (boolean) If true, print progress during optimization.
-
-    Outputs:
-    A list containing the value of the loss function at each training iteration.
-    """
     dim, num_train = X.shape
     num_classes = np.max(y) + 1 # assume y takes values 0...K-1 where K is number of classes
+    
+    print "num_classes", num_classes
     if self.W is None:
-      # lazily initialize W
       self.W = np.random.randn(num_classes, dim) * 0.001
+
 
     # Run stochastic gradient descent to optimize W
     loss_history = []
@@ -53,53 +39,36 @@ class LinearClassifier:
     return loss_history
 
   def predict(self, X):
-    """
-    Use the trained weights of this linear classifier to predict labels for
-    data points.
-
-    Inputs:
-    - X: D x N array of training data. Each column is a D-dimensional point.
-
-    Returns:
-    - y_pred: Predicted labels for the data in X. y_pred is a 1-dimensional
-      array of length N, and each element is an integer giving the predicted
-      class.
-    """
-    y_pred = np.zeros(X.shape[1])
+    y_pred = np.zeros(X.shape[0])
+    print "y_pred.shape", y_pred.shape
     scores = self.W.dot(X)
+    print "scores.shapes ", scores.shape
     y_pred = np.argmax(scores, axis=0) # top scoring class
     return y_pred
   
   def loss(self, X_batch, y_batch, reg):
-    """
-    Compute the loss function and its derivative. 
-    Subclasses will override this.
-
-    Inputs:
-    - X_batch: D x N array of data; each column is a data point.
-    - y_batch: 1-dimensional array of length N with labels 0...K-1, for K classes.
-    - reg: (float) regularization strength.
-
-    Returns: A tuple containing:
-    - loss as a single float
-    - gradient with respect to self.W; an array of the same shape as W
-    """
     pass
 
 
-class LinearSVM(LinearClassifier):
-  """ A subclass that uses the Multiclass SVM loss function """
+  def error(self, y, y_pred):
+    error = 0
+    total = y.shape[0]
+    total2 = y_pred.shape[0]
+    print total , total2
+    for i in range(0, total):
+      if (y[i] !=y_pred[i]):
+        error+=1
+    print "Correctly classified ", error , "out of ", total, "examples "
+    return
 
+
+class LinearSVM(LinearClassifier):
   def loss(self, X_batch, y_batch, reg):
     return svm_loss_vectorized(self.W, X_batch, y_batch, reg)
 
 
 def svm_loss_vectorized(W, X, y, reg):
-  """
-  Structured SVM loss function, vectorized implementation.
 
-  Inputs and outputs are the same as svm_loss_naive.
-  """
   loss = 0.0
   dW = np.zeros(W.shape) # initialize the gradient as zero
 
@@ -131,11 +100,6 @@ class Softmax(LinearClassifier):
 
 
 def softmax_loss_vectorized(W, X, y, reg):
-  """
-  Softmax loss function, vectorized version.
-
-  Inputs and outputs are the same as softmax_loss_naive.
-  """
   # Initialize the loss and gradient to zero.
   loss = 0.0
   dW = np.zeros_like(W)

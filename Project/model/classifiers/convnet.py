@@ -427,23 +427,23 @@ def init_chess_convnet(input_shape=(6, 8, 8), num_classes=64,
   C, H, W = input_shape
   F1, F2, F3, F4, F5, FC1, FC2 = num_filters
   model = {}
-  model['W1'] = np.random.random(F1, 6, filter_size, filter_size)
+  model['W1'] = np.random.randn(F1, 6, filter_size, filter_size)
   model['b1'] = np.ones(F1) * 2
-  model['W2'] = np.random.random(F2, F1, filter_size, filter_size)
-  model['b2'] = np.random.random(F2)
-  model['W3'] = np.random.random(F3, F2, filter_size, filter_size)
-  model['b3'] = np.random.random(F3)
-  model['W4'] = np.random.random(F4, F3, filter_size, filter_size)
-  model['b4'] = np.random.random(F4)
-  model['W5'] = np.random.random(F5, F4, filter_size, filter_size)
-  model['b5'] = np.random.random(F5)
+  model['W2'] = np.random.randn(F2, F1, filter_size, filter_size)
+  model['b2'] = np.random.randn(F2)
+  model['W3'] = np.random.randn(F3, F2, filter_size, filter_size)
+  model['b3'] = np.random.randn(F3)
+  model['W4'] = np.random.randn(F4, F3, filter_size, filter_size)
+  model['b4'] = np.random.randn(F4)
+  model['W5'] = np.random.randn(F5, F4, filter_size, filter_size)
+  model['b5'] = np.random.randn(F5)
 
-  model['W6'] = np.random.random(H * W * F5, FC1)
-  model['b6'] = np.random.random(FC1)
-  model['W7'] = np.random.random(FC1, FC2)
-  model['b7'] = np.random.random(FC2)
-  model['W8'] = np.random.random(FC2, num_classes)
-  model['b8'] = np.random.random(num_classes)
+  model['W6'] = np.random.randn(H * W * F5, FC1)
+  model['b6'] = np.random.randn(FC1)
+  model['W7'] = np.random.randn(FC1, FC2)
+  model['b7'] = np.random.randn(FC2)
+  model['W8'] = np.random.randn(FC2, num_classes)
+  model['b8'] = np.random.randn(num_classes)
 
   for i in [1, 2, 3, 4, 5, 6, 7, 8]:
     model['W%d' % i] *= weight_scale
