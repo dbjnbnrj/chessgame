@@ -10,8 +10,8 @@ class ClassifierTrainer(object):
             model, loss_function, 
             reg=0.0, dropout=1.0,
             learning_rate=1e-2, momentum=0, learning_rate_decay=0.95,
-            update='momentum', sample_batches=True,
-            num_epochs=30, batch_size=100, acc_frequency=None,
+            update='sgd', sample_batches=True,
+            num_epochs=15, batch_size=100, acc_frequency=None,
             augment_fn=None, predict_fn=None,
             verbose=False):
 

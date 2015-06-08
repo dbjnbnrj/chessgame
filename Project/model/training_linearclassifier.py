@@ -5,12 +5,11 @@ import numpy
 
 numToPiece = {0: 'Piece', 1: 'P', 2: 'R', 3: 'N', 4: 'B', 5: 'Q', 6: 'K'}
 
-netsToTrain = [0, 1, 2, 3, 4, 5, 6,]
 
 Xdata = ["../data/X_train_500.pkl", "../data/p1_X_500.pkl", "../data/p2_X_500.pkl", "../data/p3_X_500.pkl","../data/p4_X_500.pkl","../data/p5_X_500.pkl", "../data/p6_X_500.pkl"]
 Ydata = ["../data/y_train_500.pkl", "../data/p1_y_500.pkl", "../data/p2_y_500.pkl", "../data/p3_y_500.pkl","../data/p4_y_500.pkl","../data/p5_y_500.pkl", "../data/p6_y_500.pkl"]
 
-for net in netsToTrain:
+for net in [0]:
 	X = get_data(Xdata[net])
 	y = get_data(Ydata[net])
 	totalsize = len(X) 
@@ -36,6 +35,7 @@ for net in netsToTrain:
 	validation = [X_val, X_val.transpose(), X_val.transpose()]
 
 	for idx, classifier in enumerate(classifiers):
+		print "@ ",idx
 		X_train = training[idx]
 		X_val = validation[idx]
 

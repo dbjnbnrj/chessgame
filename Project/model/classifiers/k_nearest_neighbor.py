@@ -66,10 +66,12 @@ class KNearestNeighbor:
   def error(self, y, y_pred):
     error = 0
     total = y.shape[0]
+    total2 = y_pred.shape[0]
+    print total , total2
     for i in range(0, total):
       if (y[i] !=y_pred[i]):
         error+=1
-    print "Correctly classified ", error , "out of ", total, "examples "
+    print "Correctly classified",  total-error, " of the ", total, "examples "
     return
 
 

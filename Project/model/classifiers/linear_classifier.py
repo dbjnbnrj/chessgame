@@ -58,7 +58,7 @@ class LinearClassifier:
     for i in range(0, total):
       if (y[i] !=y_pred[i]):
         error+=1
-    print "Correctly classified ", error , "out of ", total, "examples "
+    print "Correctly classified",  total-error, " of the ", total, "examples "
     return
 
 

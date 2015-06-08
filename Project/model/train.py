@@ -3,7 +3,7 @@ from classifiers.neural_net import *
 from classifiers.convnet import *
 import numpy
 
-def two_layer_affine_net():
+def two_layer_affine_net(X_train, y_train, X_val, y_val):
 	# Only For Neural Networks
 	N, C, H, W = X_train.shape
 	X_train = numpy.reshape(X_train, (N, C*H*W))
@@ -16,11 +16,11 @@ def two_layer_affine_net():
 	trainer = ClassifierTrainer()
 	result = trainer.train(X_train, y_train, X_val, y_val, init_two_layer_model(inp ,hidden,out), two_layer_net,
 		reg=0.,learning_rate=0.001, learning_rate_decay=0.01, update='sgd', sample_batches=False, 
-		num_epochs=10,verbose=False)
+		num_epochs=15,verbose=False)
 	return result
 
 def two_layer_conv_net():
-	print "Conv-Relu + Affine Neural Network Layout --- "
+	print " [conv-relu] - [affine-relu]  "
 	result = train(X_train, y_train, X_val, y_val, init_two_layer_convnet(), two_layer_convnet)
 	return result
 
@@ -34,15 +34,11 @@ def five_layer_conv_net():
 	result = train(X_train, y_train, X_val, y_val, init_five_layer_convnet(), five_layer_convnet)
 	return result
 
-def chess_net():
-	print "[conv - relu - pool] x 3 - [affine - relu - dropout] - affine - softmax"
-	result = train(X_train, y_train, X_val, y_val, init_chess_convnet(), chess_convnet)
-	return result
-
 Xdata = ["../data/X_train_500.pkl", "../data/p1_X_500.pkl", "../data/p2_X_500.pkl", "../data/p3_X_500.pkl","../data/p4_X_500.pkl","../data/p5_X_500.pkl", "../data/p6_X_500.pkl"]
 Ydata = ["../data/y_train_500.pkl", "../data/p1_y_500.pkl", "../data/p2_y_500.pkl", "../data/p3_y_500.pkl","../data/p4_y_500.pkl","../data/p5_y_500.pkl", "../data/p6_y_500.pkl"]
 
-for net in [0]:
+for net in range(2,7):
+	print "At net ...",Xdata[net]
 	X = get_data(Xdata[net])
 	y = get_data(Ydata[net])
 	
@@ -57,17 +53,13 @@ for net in [0]:
 	X_val = X[trainsize:trainsize+testsize]
 	y_val = y[trainsize:trainsize+testsize]
 
-	best_model, loss_history, train_acc_history, val_acc_history = chess_net()
+	best_model, loss_history, train_acc_history, val_acc_history = three_layer_conv_net()
 	
-	#newfname = Xdata[net].replace("X", "model")
-	#print "Saving result in ...", newfname
-	#save_pickled(best_model, newfname)
-
 	print 'Final loss: ' % (loss_history[-1])
 	print 'Final validation acc: ', val_acc_history[-1]
 	print 'Final train acc: ', train_acc_history[-1]
 
-	plot(loss_history, train_acc_history, val_acc_history)
+	#plot(loss_history, train_acc_history, val_acc_history)
 
 
 

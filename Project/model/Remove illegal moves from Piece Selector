@@ -1,9 +1,0 @@
-Remove illegal moves from Piece Selector
-	for each square of Piece Selector Network:
-		if there is a piece at that position:
-				availableMoves = get legal move selector network for that piece and at that coordinate
-				score = max(availableMoves) * availablePiecesBoard
-				if score > maxScore:
-					keep from and to coords
-	return from and to coords
-

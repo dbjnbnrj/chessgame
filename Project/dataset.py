@@ -11,8 +11,6 @@ DATA = "data/dataset.pgn"
 NUM_GAMES = 500
 print "Loading PGN file..."
 games = get_all_games(DATA)
-NUM_GAMES = len(games)
-
 
 games = games[:NUM_GAMES]
 print "Finished loading the PGN file."
@@ -28,13 +26,15 @@ p4_y, p5_y, p6_y = [], [], []
 
 NUM_MOVES = 0
 for index, game in enumerate(games):
-
+	
+	if index >= NUM_GAMES:
+		break
 	if index % 100 == 0:
 		print "Processed %d games out of %d" % (index, NUM_GAMES)
 
 	board = chess.Bitboard()
 	moves = game.moves
-
+	
 	for move_index, move in enumerate(moves):
 		if move[0].isalpha(): # check if move is SAN		
 			NUM_MOVES +=1
@@ -88,6 +88,9 @@ p1_X, p2_X, p3_X = np.array(p1_X), np.array(p2_X), np.array(p3_X)
 p4_X, p5_X, p6_X = np.array(p4_X), np.array(p5_X), np.array(p6_X)
 p1_y, p2_y, p3_y = np.array(p1_y), np.array(p2_y), np.array(p3_y)
 p4_y, p5_y, p6_y = np.array(p4_y), np.array(p5_y), np.array(p6_y)
+
+print "Move selector ", X_train.shape
+print "Piece selector ", p1_X.shape, p2_X.shape, p3_X.shape, p4_X.shape, p5_X.shape, p6_X.shape
 
 print "Processed %d games out of %d" % (NUM_GAMES, NUM_GAMES)
 print "Saving data..."
